@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Happiest Birthday 🎂 — Pankhuriiee</title>
+<style>
+  :root{
+    --bg:#0b1220;
+    --card:#071426;
+    --accent:#ff6bcb;
+    --accent2:#7b61ff;
+    --text:#eaf6ff;
+  }
+  *{box-sizing:border-box;font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial;}
+  body{margin:0;min-height:100vh;background:radial-gradient(1200px 600px at 10% 10%, rgba(123,97,255,0.08), transparent), linear-gradient(180deg,#061325,#071428);color:var(--text);display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{width:100%;max-width:980px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:22px;box-shadow:0 18px 40px rgba(2,6,23,0.6);}
+  header{display:flex;align-items:center;gap:16px}
+  .badge{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:white}
+  h1{margin:0;font-size:28px}
+  p.lead{margin:6px 0 0 0;color:#cfe8ff}
+  .layout{display:flex;gap:20px;margin-top:18px;align-items:flex-start}
+  .left{flex:1;padding:16px;background:rgba(255,255,255,0.02);border-radius:10px}
+  .right{width:420px;padding:16px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border-radius:10px;display:flex;flex-direction:column;align-items:center}
+
+  /* Cake and candles */
+  .cake-wrap{position:relative;width:360px;height:280px;display:flex;align-items:center;justify-content:center}
+  .cake{width:320px;height:140px;background:#f6d1d1;border-radius:14px 14px 30px 30px;position:relative;box-shadow:0 10px 20px rgba(0,0,0,0.35)}
+  .icing{position:absolute;top:-12px;left:40px;right:40px;height:36px;background:linear-gradient(90deg,#ffefef,#ffdfe6);border-radius:20px 20px 80px 80px}
+  .candles{position:absolute;top:-56px;left:50%;transform:translateX(-50%);display:flex;gap:18px}
+  .candle{width:16px;height:44px;background:#fff7d6;border-radius:3px;position:relative;display:flex;align-items:flex-start;justify-content:center;cursor:pointer;user-select:none}
+  .wick{position:absolute;top:-6px;width:2px;height:8px;background:#222}
+  .flame{position:absolute;top:-24px;width:14px;height:22px;border-radius:60% 60% 40% 40%;background: radial-gradient(circle at 40% 30%, #fff4a3 0%, #ffde59 30%, #ff8a00 60%);filter:drop-shadow(0 6px 8px rgba(255,140,0,0.12));animation: flicker 700ms infinite;transition:transform 250ms,opacity 250ms}
+  .flame.extinguished{opacity:0;transform:scale(0)}
+  @keyframes flicker{0%{transform: translateY(0) scale(1)}50%{transform: translateY(-2px) scale(1.03)}100%{transform: translateY(0) scale(1)}}
+
+  /* balloons */
+  .balloon{position:fixed;bottom:-200px;width:64px;height:84px;border-radius:50% 50% 50% 50%;display:flex;align-items:center;justify-content:center;transform-origin:center bottom;cursor:pointer}
+  .string{position:absolute;bottom:-40px;left:50%;width:2px;height:40px;background:#333;transform:translateX(-50%)}
+  .balloon.red{background:linear-gradient(135deg,#ff6b6b,#ff9aa2)}
+  .balloon.pink{background:linear-gradient(135deg,#ff6bcb,#ff9ad6)}
+  .balloon.blue{background:linear-gradient(135deg,#6bc1ff,#9ad4ff)}
+  .balloon.green{background:linear-gradient(135deg,#7ef6c7,#6ee7b7)}
+
+  /* confetti/party popper (top-left canvas) */
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+  /* message */
+  .message-box{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:10px}
+  .big-msg{font-size:18px;line-height:1.35;color:#fff;margin:0;white-space:pre-wrap}
+  .controls{display:flex;gap:10px;margin-top:12px}
+  button{cursor:pointer;border:0;padding:10px 14px;border-radius:8px;background:linear-gradient(90deg,var(--accent), var(--accent2));color:white;font-weight:700}
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#cfe8ff}
+  .note{margin-top:10px;color:#d5e9ff;font-size:13px}
+
+  footer{margin-top:14px;display:flex;justify-content:space-between;align-items:center;color:#bcdcff;font-size:13px}
+
+  @media (max-width:900px){ .layout{flex-direction:column} .right{width:100%} .cake-wrap{width:320px;height:240px} }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="card" role="main">
+  <header>
+    <div class="badge">P</div>
+    <div>
+      <h1>Happiest Birthday — Pankhuriiee 🎉</h1>
+      <p class="lead">A small surprise — click the candles and pop the party!</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="left">
+      <div class="message-box">
+        <p class="big-msg" id="greeting">Happiest birthday to the purest heart no words can describe your Beauty 🙂‍↔️💕 & Every moment with you is a treasure and I want to you to achieve everything you've ever told me🎀</p>
+        <div class="note">Tip: Click candles on the cake to blow them out. Click "Pop party" for balloons & confetti.</div>
+        <div class="controls">
+          <button id="popBtn">Pop party 🎈</button>
+          <button id="reLight" class="ghost">Relight candles</button>
+          <button id="downloadBtn" class="ghost">Download HTML</button>
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <label style="display:block;margin-bottom:6px;color:#cfe8ff">Upload 1-4 photos (optional)</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="file" accept="image/*" id="f1">
+          <input type="file" accept="image/*" id="f2">
+          <input type="file" accept="image/*" id="f3">
+          <input type="file" accept="image/*" id="f4">
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="cake-wrap">
+        <div class="candles" id="candles">
+          <div class="candle" data-i="0"><div class="wick"></div><div class="flame" data-state="on"></div></div>
+          <div class="candle" data-i="1"><div class="wick"></div><div class="flame" data-state="on"></div></div>
+          <div class="candle" data-i="2"><div class="wick"></div><div class="flame" data-state="on"></div></div>
+          <div class="candle" data-i="3"><div class="wick"></div><div class="flame" data-state="on"></div></div>
+          <div class="candle" data-i="4"><div class="wick"></div><div class="flame" data-state="on"></div></div>
+        </div>
+
+        <div class="cake"></div>
+        <div class="icing"></div>
+      </div>
+
+      <div class="note">Click each flame to extinguish. When all are out, balloons fly and confetti falls!</div>
+    </div>
+  </div>
+
+  <footer>
+    <div>Made with ❤️ — from Parth</div>
+    <div id="countdown">12 Nov • 12:00 AM</div>
+  </footer>
+</div>
+
+<script>
+  // Candle logic
+  const candleEls = Array.from(document.querySelectorAll('.candle'));
+  let out = new Array(candleEls.length).fill(false);
+
+  function checkAllOut(){
+    if(out.every(Boolean)){
+      // trigger balloons + confetti automatically
+      launchBalloons();
+      startConfetti();
+    }
+  }
+
+  candleEls.forEach((c, i)=>{
+    c.addEventListener('click', ()=>{
+      if(out[i]) return;
+      const flame = c.querySelector('.flame');
+      flame.classList.add('extinguished');
+      out[i] = true;
+      checkAllOut();
+    });
+  });
+
+  document.getElementById('reLight').addEventListener('click', ()=>{
+    out.fill(false);
+    document.querySelectorAll('.flame').forEach(f => f.classList.remove('extinguished'));
+  });
+
+  // Balloons
+  const colors = ['red','pink','blue','green'];
+  let balloonCount = 8;
+  function launchBalloons(){
+    for(let i=0;i<balloonCount;i++){
+      createBalloon(i);
+    }
+  }
+
+  function createBalloon(i){
+    const b = document.createElement('div');
+    b.className = 'balloon ' + colors[i % colors.length];
+    b.style.left = (10 + Math.random()*80) + '%';
+    b.style.bottom = '-150px';
+    b.style.zIndex = 40;
+    b.style.transition = 'transform 6s ease-in, bottom 6s linear';
+    document.body.appendChild(b);
+    const s = document.createElement('div'); s.className='string';
+    b.appendChild(s);
+    // animate up
+    setTimeout(()=>{ b.style.bottom = '90%'; b.style.transform = 'translateY(-10px) scale(1.05) rotate(' + (Math.random()*20-10) + 'deg)'; }, 50);
+    // float away and remove
+    setTimeout(()=>{ b.style.opacity = 0; b.remove(); }, 8000);
+    // click to pop
+    b.addEventListener('click', (e)=>{
+      popBalloon(b, e.clientX, e.clientY);
+    });
+  }
+
+  function popBalloon(b, x, y){
+    // quick pop visual
+    const pop = document.createElement('div');
+    pop.textContent = '🎉';
+    pop.style.position='fixed';
+    pop.style.left = (b.getBoundingClientRect().left + 16) + 'px';
+    pop.style.top = (b.getBoundingClientRect().top + 24) + 'px';
+    pop.style.fontSize = '30px';
+    document.body.appendChild(pop);
+    setTimeout(()=>pop.remove(),600);
+    b.remove();
+    // small confetti burst
+    burstConfettiAt(x, y);
+  }
+
+  // Confetti canvas (global & bursts)
+  const confettiCanvas = document.getElementById('confetti');
+  const ctx = confettiCanvas.getContext('2d');
+  function resize(){ confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  let pieces = [];
+  function startConfetti(){
+    pieces = [];
+    for(let i=0;i<180;i++){
+      pieces.push({
+        x: Math.random()*confettiCanvas.width,
+        y: Math.random()*confettiCanvas.height - confettiCanvas.height,
+        r: Math.random()*8+4,
+        a: Math.random()*360,
+        d: Math.random()*70+10,
+        tilt: Math.random()*10-5,
+        color: ['#ff6bcb','#ffd166','#7b61ff','#4fe3c4'][Math.floor(Math.random()*4)],
+        speed: Math.random()*3+1
+      });
+    }
+    animateConfetti();
+    setTimeout(()=>{ pieces = []; ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); }, 7000);
+  }
+
+  let anim;
+  function animateConfetti(){
+    cancelAnimationFrame(anim);
+    function frame(){
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      pieces.forEach(p=>{
+        p.y += p.speed + Math.sin(p.d)*0.3;
+        p.x += Math.sin(p.d)*0.6;
+        p.tilt += 0.1;
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.tilt*0.1);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*1.6);
+        ctx.restore();
+      });
+      anim = requestAnimationFrame(frame);
+    }
+    frame();
+  }
+
+  function burstConfettiAt(x,y){
+    const burst = [];
+    for(let i=0;i<40;i++){
+      burst.push({
+        x: x + (Math.random()*80-40),
+        y: y + (Math.random()*80-40),
+        r: Math.random()*6+3,
+        tilt: Math.random()*10-5,
+        color: ['#ff6bcb','#ffd166','#7b61ff','#4fe3c4'][Math.floor(Math.random()*4)],
+        speed: Math.random()*4+1
+      });
+    }
+    // draw burst for 1.2s
+    let t0 = performance.now();
+    function frame(now){
+      const dt = now - t0;
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      burst.forEach((p, idx)=>{
+        p.y += p.speed * 0.9;
+        p.x += Math.sin(idx + dt*0.01) * 0.7;
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.tilt*0.1);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*1.6);
+        ctx.restore();
+      });
+      if(now - t0 < 1200) requestAnimationFrame(frame);
+      else ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // Pop party button
+  document.getElementById('popBtn').addEventListener('click', ()=>{
+    launchBalloons();
+    startConfetti();
+  });
+
+  // Allow clicking all candles by pressing space
+  window.addEventListener('keydown',(e)=>{ if(e.key === ' '){ e.preventDefault(); candleEls.forEach((c,i)=>{ if(!out[i]) c.click(); }); }});
+
+  // Download HTML file (creates blob)
+  document.getElementById('downloadBtn').addEventListener('click', ()=>{
+    const html = '<!doctype html>\n' + document.documentElement.outerHTML;
+    const blob = new Blob([html], {type:'text/html'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'happy-birthday-pankhuriiee.html';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  // Photo uploads to replace greeting area background (optional)
+  ['f1','f2','f3','f4'].forEach(id=>{
+    const inp = document.getElementById(id);
+    inp.addEventListener('change',(e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=> {
+        // append image to left area as small preview
+        const img = document.createElement('img');
+        img.src = reader.result;
+        img.style.width = '100px';
+        img.style.margin = '8px';
+        img.style.borderRadius = '8px';
+        document.querySelector('.left').appendChild(img);
+      }
+      reader.readAsDataURL(file);
+    });
+  });
+
+  // small auto countdown display (optional)
+  function updateCountdown(){
+    const now = new Date();
+    const target = new Date();
+    target.setMonth(10); // November (0-based months)
+    target.setDate(14);
+    target.setHours(0,0,0,0);
+    const diff = target - now;
+    if(diff <= 0){ document.getElementById('countdown').textContent = 'It\'s time! 🎉'; }
+    else {
+      const hh = Math.floor(diff/1000/60/60);
+      const mm = Math.floor((diff/1000/60)%60);
+      const ss = Math.floor((diff/1000)%60);
+      document.getElementById('countdown').textContent = hh + 'h ' + mm + 'm ' + ss + 's left';
+    }
+  }
+  setInterval(updateCountdown,1000); updateCountdown();
+</script>
+</body>
+</html>
